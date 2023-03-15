@@ -27,6 +27,7 @@ class PostController implements Controller {
             this.create
         );
         this.router.get(`${this.path}`, this.getAll);
+        this.router.put(`${this.path}/:id`, authenticated, this.updatePost);
     }
     private create = async (
         req: Request,
@@ -70,6 +71,24 @@ class PostController implements Controller {
             res.status(200).send(posts);
         } catch (e: any) {
             next(new HttpException(400, 'cannot get posts'));
+        }
+    };
+
+    private updatePost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const post = await this.PostService.update(
+                req.params.id,
+                req.body,
+                req.user
+            );
+            res.status(200).send(post);
+        } catch (error: any) {
+            console.log(error.message);
+            next(new HttpException(400, 'cannot update post'));
         }
     };
 }

@@ -4,7 +4,11 @@ export default interface IUser extends Document {
     email: string;
     password: string;
     name: string;
-    role: string;
-    photo: string;
+    image: string;
+    gender: string;
+    phone: string;
+    address: string;
+    birthday: Date;
+
     isValidPassword(password: string): Promise<Error | boolean>;
 }

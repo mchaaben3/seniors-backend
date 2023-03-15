@@ -1,11 +1,11 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import Controller from '@/utils/interfaces/controller.interface';
-import HttpException from '@/utils/exceptions/http.exception';
-import validationMiddleware from '@/middlewares/validation.middleware';
-import validate from '@/resources/user/user.validation';
-import UserService from '@/resources/user/user.service';
 import authenticated from '@/middlewares/authenticated.middleware';
+import validationMiddleware from '@/middlewares/validation.middleware';
+import UserService from '@/resources/user/user.service';
+import validate from '@/resources/user/user.validation';
+import HttpException from '@/utils/exceptions/http.exception';
+import Controller from '@/utils/interfaces/controller.interface';
 import cloudinary from 'cloudinary';
+import { NextFunction, Request, Response, Router } from 'express';
 import multer from 'multer';
 
 class UserController implements Controller {
@@ -34,6 +34,7 @@ class UserController implements Controller {
         this.router.get(`${this.path}/me`, authenticated, this.me);
         this.router.get(`${this.path}/logout`, authenticated, this.logout);
         this.router.put(`${this.path}/me`, authenticated, this.updateUser);
+        this.router.get(`${this.path}`, authenticated, this.getAllUsers);
     }
 
     private register = async (
@@ -62,11 +63,11 @@ class UserController implements Controller {
                 name,
                 email,
                 password,
-                result.secure_url,
-                'user'
+                result.secure_url
             );
             return response.status(201).json({ token });
         } catch (error: any) {
+            console.log(error);
             next(new Error('Register failed'));
         }
     };
@@ -113,6 +114,17 @@ class UserController implements Controller {
                 request.body
             );
             return response.status(200).json({ updatedUser });
+        } catch (error: any) {}
+    };
+
+    private getAllUsers = async (
+        request: Request,
+        response: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const users = await this.user.getAllUsers();
+            return response.status(200).json(users);
         } catch (error: any) {}
     };
 }

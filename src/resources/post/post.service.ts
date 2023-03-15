@@ -35,5 +35,35 @@ class PostService {
             throw new Error('Unable to get posts');
         }
     }
+
+    public async update(
+        params: any,
+        body: any,
+        user: any
+    ): Promise<Post | null> {
+        try {
+            const post = await this.post.findById(params);
+
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            if (post.user.toString() !== user._id.toString()) {
+                console.log({
+                    postUser: post.user,
+                    user: user._id,
+                });
+                throw new Error('User not authorized');
+            }
+
+            const updatedPost = await this.post.findByIdAndUpdate(params, {
+                $set: body,
+            });
+
+            return updatedPost;
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error('Unable to update post');
+        }
+    }
 }
 export default PostService;

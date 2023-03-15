@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
 import User from '@/resources/user/user.interface';
 import Token from '@/utils/interfaces/token.interface';
+import jwt from 'jsonwebtoken';
 
 export const createToken = (user: User): string => {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 360 * 360; // an hour
     const secret = process.env.JWT_SECRET;
 
     return jwt.sign({ id: user._id }, secret as jwt.Secret, { expiresIn });

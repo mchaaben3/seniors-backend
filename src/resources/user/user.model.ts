@@ -23,8 +23,20 @@ const UserSchema = new Schema(
             type: String,
             required: false,
         },
-        role: {
+        gender: {
             type: String,
+            required: false,
+        },
+        phone: {
+            type: String,
+            required: false,
+        },
+        address: {
+            type: String,
+            required: false,
+        },
+        birthday: {
+            type: Date,
             required: false,
         },
     },

@@ -12,8 +12,7 @@ class UserService {
         name: string,
         email: string,
         password: string,
-        image: string,
-        role: string
+        image: string
     ): Promise<string | Error> {
         try {
             const user = await this.user.create({
@@ -21,7 +20,6 @@ class UserService {
                 email,
                 password,
                 image,
-                role,
             });
             const accessToken = token.createToken(user);
             return accessToken;
@@ -59,9 +57,7 @@ class UserService {
 
     /**
      * update a user
-     * @param id
-     * @param data
-     * @returns
+ 
      * **/
     public async updateUser(id: string, data: any): Promise<string | Error> {
         const user = await this.user.findByIdAndUpdate(id, {
@@ -71,6 +67,13 @@ class UserService {
             throw new Error('User not found');
         }
         return 'User updated successfully';
+    }
+
+    /**
+     * get all users
+     * **/
+    public async getAllUsers(): Promise<any> {
+        return await this.user.find();
     }
 }
 export default UserService;
